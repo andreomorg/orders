@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- Generates the strongly typed DomainErrors class from the .resx at build time -->
+    <EmbeddedResource Update="Resources\DomainErrors.resx">
+      <StronglyTypedFileName>$(IntermediateOutputPath)DomainErrors.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>Orders.Domain.Resources</StronglyTypedNamespace>
+      <StronglyTypedClassName>DomainErrors</StronglyTypedClassName>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
