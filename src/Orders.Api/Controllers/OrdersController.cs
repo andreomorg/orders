@@ -3,19 +3,19 @@ using Orders.Api.Contracts;
 using Orders.Application.Common;
 using Orders.Application.Orders;
 using Orders.Domain.Orders;
+using static Orders.Api.Contracts.MediaTypes;
 
 namespace Orders.Api.Controllers;
 
 [ApiController]
 [Route("api/orders")]
-[Produces("application/json")]
 public sealed class OrdersController(IOrderService orders) : ControllerBase
 {
     /// <summary>
     /// Starts a new, empty and open order.
     /// </summary>
     [HttpPost]
-    [ProducesResponseType<OrderDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType<OrderDto>(StatusCodes.Status201Created, Json)]
     public async Task<ActionResult<OrderDto>> Create(CancellationToken cancellationToken)
     {
         var order = await orders.CreateAsync(cancellationToken);
@@ -30,8 +30,8 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     /// <param name="pageSize">Orders per page, between 1 and 50.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     [HttpGet]
-    [ProducesResponseType<PagedResult<OrderDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<PagedResult<OrderDto>>(StatusCodes.Status200OK, Json)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, ProblemJson)]
     public async Task<ActionResult<PagedResult<OrderDto>>> List(
         [FromQuery] OrderStatus? status,
         CancellationToken cancellationToken,
@@ -43,9 +43,9 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     /// Gets an order with its products.
     /// </summary>
     [HttpGet("{id}")]
-    [ProducesResponseType<OrderDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<OrderDto>(StatusCodes.Status200OK, Json)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, ProblemJson)]
     public async Task<ActionResult<OrderDto>> GetById(Guid id, CancellationToken cancellationToken) =>
         Ok(await orders.GetByIdAsync(id, cancellationToken));
 
@@ -53,11 +53,11 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     /// Adds units of a catalog product to an open order. If the product is already in the order, the quantity is added up.
     /// </summary>
     [HttpPost("{id}/items")]
-    [ProducesResponseType<OrderDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType<OrderDto>(StatusCodes.Status200OK, Json)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity, ProblemJson)]
     public async Task<ActionResult<OrderDto>> AddItem(
         Guid id,
         AddOrderItemRequest request,
@@ -73,11 +73,11 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     /// <param name="quantity">Units to remove. When omitted or equal to the item quantity, the item is removed.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     [HttpDelete("{id}/items/{productId}")]
-    [ProducesResponseType<OrderDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType<OrderDto>(StatusCodes.Status200OK, Json)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity, ProblemJson)]
     public async Task<ActionResult<OrderDto>> RemoveItem(
         Guid id,
         Guid productId,
@@ -89,11 +89,11 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     /// Closes an order. Only orders with at least one product can be closed; closed orders cannot be changed.
     /// </summary>
     [HttpPost("{id}/close")]
-    [ProducesResponseType<OrderDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType<OrderDto>(StatusCodes.Status200OK, Json)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, ProblemJson)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity, ProblemJson)]
     public async Task<ActionResult<OrderDto>> Close(Guid id, CancellationToken cancellationToken) =>
         Ok(await orders.CloseAsync(id, cancellationToken));
 }
