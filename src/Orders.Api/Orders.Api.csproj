@@ -4,6 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- XML comments of the controllers become route descriptions in the OpenAPI document (Swagger) -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Only the API surface is documented; no warning for every undocumented public member -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +18,19 @@
   <ItemGroup>
     <ProjectReference Include="..\Orders.Application\Orders.Application.csproj" />
     <ProjectReference Include="..\Orders.Infrastructure\Orders.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The IDE regenerates ApiErrors.Designer.cs (strongly typed class) whenever the .resx is edited -->
+    <EmbeddedResource Update="Resources\ApiErrors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApiErrors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Resources\ApiErrors.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApiErrors.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

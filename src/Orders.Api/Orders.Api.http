@@ -1,6 +1,49 @@
-@Orders.Api_HostAddress = http://localhost:5146
+@baseUrl = http://localhost:5146
 
-GET {{Orders.Api_HostAddress}}/weatherforecast/
+# Product ids from the catalog seed
+@notebookId = 00000000-0000-0000-0000-000000000001
+@mouseId = 00000000-0000-0000-0000-000000000002
+
+### List the product catalog
+GET {{baseUrl}}/api/products
 Accept: application/json
 
-###
+### Start a new order (run this first: it stores the new order id in {{orderId}} for the requests below)
+POST {{baseUrl}}/api/orders
+Accept: application/json
+
+> {%
+    client.global.set("orderId", response.body.id);
+%}
+
+### Add products to the order
+POST {{baseUrl}}/api/orders/{{orderId}}/items
+Content-Type: application/json
+
+{
+  "productId": "{{mouseId}}",
+  "quantity": 3
+}
+
+### Remove 1 unit of a product (omit "quantity" to remove the whole item)
+DELETE {{baseUrl}}/api/orders/{{orderId}}/items/{{mouseId}}?quantity=1
+
+### Get the order with its products
+GET {{baseUrl}}/api/orders/{{orderId}}
+Accept: application/json
+
+### Close the order
+POST {{baseUrl}}/api/orders/{{orderId}}/close
+
+### List orders (all filters optional)
+GET {{baseUrl}}/api/orders?status=Closed&page=1&pageSize=10
+Accept: application/json
+
+### Error example: adding to a closed order returns 422
+POST {{baseUrl}}/api/orders/{{orderId}}/items
+Content-Type: application/json
+
+{
+  "productId": "{{notebookId}}",
+  "quantity": 1
+}
