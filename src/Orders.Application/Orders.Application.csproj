@@ -14,4 +14,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- The IDE regenerates ApplicationErrors.Designer.cs (strongly typed class) whenever the .resx is edited -->
+    <EmbeddedResource Update="Resources\ApplicationErrors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApplicationErrors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Resources\ApplicationErrors.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApplicationErrors.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>
