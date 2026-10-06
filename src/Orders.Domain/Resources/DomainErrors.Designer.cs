@@ -58,6 +58,15 @@ namespace Orders.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The data was changed by another request. Reload it and try again..
+        /// </summary>
+        internal static string ConcurrencyConflict {
+            get {
+                return ResourceManager.GetString("ConcurrencyConflict", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Quantity must be greater than zero..
         /// </summary>
         internal static string InvalidQuantity {
@@ -117,6 +126,15 @@ namespace Orders.Domain.Resources {
         internal static string QuantityExceedsItem {
             get {
                 return ResourceManager.GetString("QuantityExceedsItem", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An order item cannot have more than 1000 units..
+        /// </summary>
+        internal static string QuantityExceedsLimit {
+            get {
+                return ResourceManager.GetString("QuantityExceedsLimit", resourceCulture);
             }
         }
     }

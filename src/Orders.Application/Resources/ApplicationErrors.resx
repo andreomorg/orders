@@ -19,7 +19,7 @@
     <value>Product not found.</value>
   </data>
   <data name="InvalidPage" xml:space="preserve">
-    <value>Page must be greater than or equal to 1.</value>
+    <value>Page must be between 1 and 42949672.</value>
   </data>
   <data name="InvalidPageSize" xml:space="preserve">
     <value>Page size must be between 1 and 50.</value>

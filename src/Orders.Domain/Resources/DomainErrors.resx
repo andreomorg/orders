@@ -27,6 +27,12 @@
   <data name="QuantityExceedsItem" xml:space="preserve">
     <value>Cannot remove more units than the order item has.</value>
   </data>
+  <data name="QuantityExceedsLimit" xml:space="preserve">
+    <value>An order item cannot have more than 1000 units.</value>
+  </data>
+  <data name="ConcurrencyConflict" xml:space="preserve">
+    <value>The data was changed by another request. Reload it and try again.</value>
+  </data>
   <data name="ProductNameRequired" xml:space="preserve">
     <value>Product name is required.</value>
   </data>

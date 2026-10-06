@@ -22,6 +22,9 @@ internal sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder.Property(order => order.CreatedAt).IsRequired();
 
+        // Saving fails if another request changed the order since it was loaded
+        builder.Property(order => order.Version).IsConcurrencyToken();
+
         // Calculated by the domain, not stored
         builder.Ignore(order => order.Total);
         builder.Ignore(order => order.IsClosed);

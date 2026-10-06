@@ -44,6 +44,7 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType<OrderDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<OrderDto>> GetById(Guid id, CancellationToken cancellationToken) =>
         Ok(await orders.GetByIdAsync(id, cancellationToken));
@@ -55,12 +56,14 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     [ProducesResponseType<OrderDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult<OrderDto>> AddItem(
         Guid id,
         AddOrderItemRequest request,
         CancellationToken cancellationToken) =>
-        Ok(await orders.AddItemAsync(id, request.ProductId, request.Quantity, cancellationToken));
+        // [Required] guarantees both values: a missing field returns 400 before reaching this point
+        Ok(await orders.AddItemAsync(id, request.ProductId!.Value, request.Quantity!.Value, cancellationToken));
 
     /// <summary>
     /// Removes units of a product from an open order. Without <c>quantity</c>, the whole item is removed.
@@ -73,6 +76,7 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     [ProducesResponseType<OrderDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult<OrderDto>> RemoveItem(
         Guid id,
@@ -86,7 +90,9 @@ public sealed class OrdersController(IOrderService orders) : ControllerBase
     /// </summary>
     [HttpPost("{id}/close")]
     [ProducesResponseType<OrderDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult<OrderDto>> Close(Guid id, CancellationToken cancellationToken) =>
         Ok(await orders.CloseAsync(id, cancellationToken));

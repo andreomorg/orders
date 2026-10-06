@@ -21,6 +21,9 @@
   <data name="BusinessRuleViolatedTitle" xml:space="preserve">
     <value>Business rule violated</value>
   </data>
+  <data name="ConflictTitle" xml:space="preserve">
+    <value>Conflict</value>
+  </data>
   <data name="UnexpectedErrorTitle" xml:space="preserve">
     <value>An unexpected error occurred</value>
   </data>

@@ -67,6 +67,15 @@ namespace Orders.Api.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Conflict.
+        /// </summary>
+        internal static string ConflictTitle {
+            get {
+                return ResourceManager.GetString("ConflictTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Invalid request.
         /// </summary>
         internal static string InvalidRequestTitle {

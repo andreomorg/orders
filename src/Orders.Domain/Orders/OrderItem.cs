@@ -10,6 +10,11 @@ namespace Orders.Domain.Orders;
 /// </summary>
 public sealed class OrderItem : Entity
 {
+    /// <summary>
+    /// Maximum units of a single product in an order.
+    /// </summary>
+    public const int MaxQuantity = 1000;
+
     public Guid ProductId { get; private set; }
     public string ProductName { get; private set; } = null!;
     public decimal UnitPrice { get; private set; }
@@ -23,6 +28,7 @@ public sealed class OrderItem : Entity
     internal OrderItem(Guid productId, string productName, decimal unitPrice, int quantity)
     {
         EnsurePositive(quantity);
+        EnsureWithinLimit(currentQuantity: 0, quantity);
 
         ProductId = productId;
         ProductName = productName;
@@ -33,6 +39,8 @@ public sealed class OrderItem : Entity
     internal void IncreaseQuantity(int quantity)
     {
         EnsurePositive(quantity);
+        EnsureWithinLimit(Quantity, quantity);
+
         Quantity += quantity;
     }
 
@@ -53,5 +61,12 @@ public sealed class OrderItem : Entity
     {
         if (quantity <= 0)
             throw new DomainException(nameof(DomainErrors.InvalidQuantity));
+    }
+
+    // Compared as "quantity > MaxQuantity - currentQuantity" so the check itself can never overflow
+    private static void EnsureWithinLimit(int currentQuantity, int quantity)
+    {
+        if (quantity > MaxQuantity - currentQuantity)
+            throw new DomainException(nameof(DomainErrors.QuantityExceedsLimit));
     }
 }

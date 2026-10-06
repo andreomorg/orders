@@ -76,6 +76,43 @@ public class OrderAddItemTests
     }
 
     [Fact]
+    public void AddItem_WithQuantityAtLimit_AddsItem()
+    {
+        var order = new Order();
+
+        order.AddItem(TestData.Product(), OrderItem.MaxQuantity);
+
+        Assert.Equal(OrderItem.MaxQuantity, Assert.Single(order.Items).Quantity);
+    }
+
+    [Theory]
+    [InlineData(OrderItem.MaxQuantity + 1)]
+    [InlineData(int.MaxValue)]
+    public void AddItem_WithNewProductAndQuantityAboveLimit_ThrowsQuantityExceedsLimit(int quantity)
+    {
+        var order = new Order();
+
+        var exception = Assert.Throws<DomainException>(() => order.AddItem(TestData.Product(), quantity));
+
+        Assert.Equal("QuantityExceedsLimit", exception.Code);
+        Assert.Empty(order.Items);
+    }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(int.MaxValue)]
+    public void AddItem_WhenSumExceedsLimit_ThrowsQuantityExceedsLimit(int quantity)
+    {
+        var product = TestData.Product();
+        var order = TestData.OrderWith((product, OrderItem.MaxQuantity - 1));
+
+        var exception = Assert.Throws<DomainException>(() => order.AddItem(product, quantity));
+
+        Assert.Equal("QuantityExceedsLimit", exception.Code);
+        Assert.Equal(OrderItem.MaxQuantity - 1, Assert.Single(order.Items).Quantity);
+    }
+
+    [Fact]
     public void AddItem_WhenOrderIsClosed_ThrowsOrderClosed()
     {
         var product = TestData.Product();

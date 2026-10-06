@@ -58,7 +58,7 @@ namespace Orders.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Page must be greater than or equal to 1..
+        ///   Looks up a localized string similar to Page must be between 1 and 42949672..
         /// </summary>
         internal static string InvalidPage {
             get {

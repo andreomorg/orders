@@ -8,6 +8,7 @@ public class PaginationTests
     [InlineData(1, 1)]
     [InlineData(1, 10)]
     [InlineData(5, 50)]
+    [InlineData(Pagination.MaxPage, Pagination.MaxPageSize)]
     public void Validate_WithValidValues_DoesNotThrow(int page, int pageSize)
     {
         var exception = Record.Exception(() => Pagination.Validate(page, pageSize));
@@ -18,7 +19,9 @@ public class PaginationTests
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public void Validate_WithPageLowerThanOne_ThrowsInvalidPage(int page)
+    [InlineData(Pagination.MaxPage + 1)]
+    [InlineData(int.MaxValue)]
+    public void Validate_WithPageOutOfRange_ThrowsInvalidPage(int page)
     {
         var exception = Assert.Throws<ValidationException>(() => Pagination.Validate(page, 10));
 

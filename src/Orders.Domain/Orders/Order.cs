@@ -16,6 +16,12 @@ public sealed class Order : Entity
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public DateTime? ClosedAt { get; private set; }
 
+    /// <summary>
+    /// Changes on every successful change to the order. Lets the persistence detect when two requests
+    /// changed the same order at the same time (optimistic concurrency).
+    /// </summary>
+    public Guid Version { get; private set; } = Guid.NewGuid();
+
     public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
     public decimal Total => _items.Sum(item => item.Subtotal);
     public bool IsClosed => Status == OrderStatus.Closed;
@@ -30,12 +36,11 @@ public sealed class Order : Entity
 
         var existingItem = FindItem(product.Id);
         if (existingItem is not null)
-        {
             existingItem.IncreaseQuantity(quantity);
-            return;
-        }
+        else
+            _items.Add(new OrderItem(product.Id, product.Name, product.Price, quantity));
 
-        _items.Add(new OrderItem(product.Id, product.Name, product.Price, quantity));
+        NewVersion();
     }
 
     /// <summary>
@@ -50,12 +55,11 @@ public sealed class Order : Entity
             ?? throw new DomainException(nameof(DomainErrors.ProductNotInOrder));
 
         if (quantity is null || quantity == item.Quantity)
-        {
             _items.Remove(item);
-            return;
-        }
+        else
+            item.DecreaseQuantity(quantity.Value);
 
-        item.DecreaseQuantity(quantity.Value);
+        NewVersion();
     }
 
     /// <summary>
@@ -70,6 +74,8 @@ public sealed class Order : Entity
 
         Status = OrderStatus.Closed;
         ClosedAt = DateTime.UtcNow;
+
+        NewVersion();
     }
 
     private OrderItem? FindItem(Guid productId) =>
@@ -80,4 +86,6 @@ public sealed class Order : Entity
         if (IsClosed)
             throw new DomainException(nameof(DomainErrors.OrderClosed));
     }
+
+    private void NewVersion() => Version = Guid.NewGuid();
 }

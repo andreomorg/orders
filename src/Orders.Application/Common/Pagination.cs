@@ -11,9 +11,14 @@ public static class Pagination
     public const int DefaultPageSize = 10;
     public const int MaxPageSize = 50;
 
+    /// <summary>
+    /// Highest page whose offset, <c>(page - 1) * pageSize</c>, still fits in an <see cref="int"/>.
+    /// </summary>
+    public const int MaxPage = int.MaxValue / MaxPageSize;
+
     public static void Validate(int page, int pageSize)
     {
-        if (page < 1)
+        if (page is < 1 or > MaxPage)
             throw new ValidationException(nameof(ApplicationErrors.InvalidPage));
 
         if (pageSize is < 1 or > MaxPageSize)
