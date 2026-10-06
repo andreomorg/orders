@@ -484,3 +484,6 @@ $RECYCLE.BIN/
 # Pastas de trabalho locais (conversas e arquivos gerados) - nunca versionar
 **/work/
 
+
+# Relatório de cobertura gerado pelos comandos do README
+coverage/
