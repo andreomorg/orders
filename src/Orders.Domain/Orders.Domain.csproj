@@ -7,13 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Generates the strongly typed DomainErrors class from the .resx at build time -->
+    <!-- The IDE regenerates DomainErrors.Designer.cs (strongly typed class) whenever the .resx is edited -->
     <EmbeddedResource Update="Resources\DomainErrors.resx">
-      <StronglyTypedFileName>$(IntermediateOutputPath)DomainErrors.Designer.cs</StronglyTypedFileName>
-      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
-      <StronglyTypedNamespace>Orders.Domain.Resources</StronglyTypedNamespace>
-      <StronglyTypedClassName>DomainErrors</StronglyTypedClassName>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DomainErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Compile Update="Resources\DomainErrors.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DomainErrors.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
