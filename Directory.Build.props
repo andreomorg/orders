@@ -1,0 +1,8 @@
+<Project>
+
+    <PropertyGroup>
+        <!-- Pastas "work" guardam conversas e arquivos gerados; não fazem parte do build -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);work\**</DefaultItemExcludes>
+    </PropertyGroup>
+
+</Project>
